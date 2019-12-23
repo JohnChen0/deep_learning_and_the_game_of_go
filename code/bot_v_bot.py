@@ -14,14 +14,15 @@ def main():
         gotypes.Player.black: agent.naive.RandomBot(),
         gotypes.Player.white: agent.naive.RandomBot(),
     }
+    print(chr(27) + "[2J")
+    print_board(game.board)
     while not game.is_over():
-        time.sleep(0.3)  # <1>
-
-        print(chr(27) + "[2J")  # <2>
-        print_board(game.board)
+        time.sleep(1)  # <1>
         bot_move = bots[game.next_player].select_move(game)
+        print(chr(27) + "[2J")  # <2>
         print_move(game.next_player, bot_move)
         game = game.apply_move(bot_move)
+        print_board(game.board)
 
 
 if __name__ == '__main__':
