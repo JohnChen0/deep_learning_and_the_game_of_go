@@ -1,4 +1,5 @@
 # tag::encoding[]
+import six
 import six.moves.cPickle as pickle
 import gzip
 import numpy as np
@@ -19,12 +20,19 @@ def shape_data(data):
 
     labels = [encode_label(y) for y in data[1]]  # <2>
 
+    if six.PY3:
+        # Convert from zip object to list, as required by rest of the code.
+        return list(zip(features, labels))
     return zip(features, labels)  # <3>
 
 
 def load_data():
     with gzip.open('mnist.pkl.gz', 'rb') as f:
-        train_data, validation_data, test_data = pickle.load(f)  # <4>
+        if six.PY2:
+            data = pickle.load(f)
+        else:
+            data = pickle.load(f, encoding='latin1')
+        train_data, validation_data, test_data = data
 
     return shape_data(train_data), shape_data(test_data)  # <5>
 
