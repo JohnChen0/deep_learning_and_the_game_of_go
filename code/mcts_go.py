@@ -1,8 +1,8 @@
 from six.moves import input
 
-from dlgo import goboard
+from dlgo import goboard_fast as goboard
 from dlgo import gotypes
-from dlgo import minimax
+from dlgo import mcts
 from dlgo.utils import print_board, print_move, point_from_coords
 
 BOARD_SIZE = 5
@@ -20,16 +20,16 @@ def capture_diff(game_state):
                 black_stones += 1
             elif color == gotypes.Player.white:
                 white_stones += 1
-    diff = black_stones - white_stones                    # <1>
-    if game_state.next_player == gotypes.Player.black:    # <2>
-        return diff                                       # <2>
-    return -1 * diff                                      # <3>
+    diff = black_stones - white_stones
+    if game_state.next_player == gotypes.Player.black:
+        return diff
+    return -1 * diff
 # end::naive-board-heuristic[]
 
 
 def main():
     game = goboard.GameState.new_game(BOARD_SIZE)
-    bot = minimax.DepthPrunedAgent(3, capture_diff)
+    bot = mcts.MCTSAgent(500, temperature=1.4)
 
     while not game.is_over():
         print_board(game.board)
