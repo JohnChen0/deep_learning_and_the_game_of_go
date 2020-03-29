@@ -32,8 +32,8 @@ x_3 = train[2][0]    # <1>
 x_18 = train[17][0]  # <2>
 
 W = np.transpose(avg_eight)
-np.dot(W, x_3)   # <3>
-np.dot(W, x_18)  # <4>
+print('np.dot(W, x_3) = %f' % np.dot(W, x_3))   # <3>
+print('np.dot(W, x_18) = %f' % np.dot(W, x_18))  # <4>
 
 # <1> Training sample at index 2 is a "4".
 # <2> Training sample at index 17 is an "8"
@@ -49,8 +49,8 @@ def predict(x, W, b):  # <1>
 
 b = -45  # <2>
 
-print(predict(x_3, W, b))   # <3>
-print(predict(x_18, W, b))  # <4> 0.96
+print('predict(x_3) = %f' % predict(x_3, W, b))   # <3>
+print('predict(x_18) = %f' % predict(x_18, W, b))  # <4> 0.96
 
 # <1> A simple prediction is defined by applying sigmoid to the output of np.doc(W, x) + b.
 # <2> Based on the examples computed so far we set the bias term to -45.
@@ -77,12 +77,12 @@ def evaluate(data, digit, threshold, W, b):  # <1>
 
 
 # tag::evaluate_example[]
-evaluate(data=train, digit=8, threshold=0.5, W=W, b=b)  # <1>
+print('evaluate(train) = %f' % evaluate(data=train, digit=8, threshold=0.5, W=W, b=b))  # <1>
 
-evaluate(data=test, digit=8, threshold=0.5, W=W, b=b)   # <2>
+print('evaluate(test) = %f' % evaluate(data=test, digit=8, threshold=0.5, W=W, b=b))   # <2>
 
 eight_test = [x for x in test if np.argmax(x[1]) == 8]
-evaluate(data=eight_test, digit=8, threshold=0.5, W=W, b=b)  # <3>
+print('evaluate(eight) = %f' % evaluate(data=eight_test, digit=8, threshold=0.5, W=W, b=b))  # <3>
 
 # <1> Accuracy on training data of our simple model is 78% (0.7814)
 # <2> Accuracy on test data is slightly lower, at 77% (0.7749)
