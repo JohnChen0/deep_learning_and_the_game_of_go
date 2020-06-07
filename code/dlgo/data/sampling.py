@@ -11,7 +11,7 @@ from six.moves import range
 
 class Sampler:
     """Sample training and test data from zipped sgf files such that test data is kept stable."""
-    def __init__(self, data_dir='data', num_test_games=100, cap_year=2015, seed=1337):
+    def __init__(self, data_dir='data', num_test_games=100, cap_year=2014, seed=1337):
         self.data_dir = data_dir
         self.num_test_games = num_test_games
         self.test_games = []
@@ -32,8 +32,8 @@ class Sampler:
         else:
             raise ValueError(data_type + " is not a valid data type, choose from 'train' or 'test'")
 
-    def draw_samples(self, num_sample_games):
-        """Draw num_sample_games many training games from index."""
+    def draw_test_samples(self, num_sample_games):
+        """Draw num_sample_games many test games from index."""
         available_games = []
         index = KGSIndex(data_directory=self.data_dir)
 
@@ -52,18 +52,16 @@ class Sampler:
             sample = random.choice(available_games)
             if sample not in sample_set:
                 sample_set.add(sample)
-        print('Drawn ' + str(num_sample_games) + ' samples:')
+        print('Drawn ' + str(num_sample_games) + ' test samples:')
         return list(sample_set)
 
     def draw_training_games(self):
-        """Get list of all non-test games, that are no later than dec 2014
-        Ignore games after cap_year to keep training data stable
-        """
+        """Get list of all non-test games, that are later than cap_year"""
         index = KGSIndex(data_directory=self.data_dir)
         for file_info in index.file_info:
             filename = file_info['filename']
             year = int(filename.split('-')[1].split('_')[0])
-            if year > self.cap_year:
+            if year <= self.cap_year:
                 continue
             num_games = file_info['num_games']
             for i in range(num_games):
@@ -75,7 +73,7 @@ class Sampler:
     def compute_test_samples(self):
         """If not already existing, create local file to store fixed set of test samples"""
         if not os.path.isfile(self.test_folder):
-            test_games = self.draw_samples(self.num_test_games)
+            test_games = self.draw_test_samples(self.num_test_games)
             test_sample_file = open(self.test_folder, 'w')
             for sample in test_games:
                 test_sample_file.write(str(sample) + "\n")
@@ -96,7 +94,7 @@ class Sampler:
         for fileinfo in index.file_info:
             filename = fileinfo['filename']
             year = int(filename.split('-')[1].split('_')[0])
-            if year > self.cap_year:
+            if year <= self.cap_year:
                 continue
             num_games = fileinfo['num_games']
             for i in range(num_games):
@@ -119,7 +117,7 @@ class Sampler:
         for fileinfo in index.file_info:
             filename = fileinfo['filename']
             year = int(filename.split('-')[1].split('_')[0])
-            if year > self.cap_year:
+            if year <= self.cap_year:
                 continue
             if 'num_games' in fileinfo.keys():
                 num_games = fileinfo['num_games']

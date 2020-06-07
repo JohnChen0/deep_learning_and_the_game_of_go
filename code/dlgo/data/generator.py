@@ -5,9 +5,10 @@ from keras.utils import to_categorical
 
 
 class DataGenerator:
-    def __init__(self, data_directory, samples):
+    def __init__(self, data_directory, samples, data_type):
         self.data_directory = data_directory
         self.samples = samples
+        self.data_type = data_type
         self.files = set(file_name for file_name, index in samples)  # <1>
         self.num_samples = None
 
@@ -26,7 +27,7 @@ class DataGenerator:
 # tag::private_generate[]
     def _generate(self, batch_size, num_classes):
         for zip_file_name in self.files:
-            file_name = zip_file_name.replace('.tar.gz', '') + 'train'
+            file_name = zip_file_name.replace('.tar.gz', '') + self.data_type
             base = self.data_directory + '/' + file_name + '_features_*.npy'
             for feature_file in glob.glob(base):
                 label_file = feature_file.replace('features', 'labels')

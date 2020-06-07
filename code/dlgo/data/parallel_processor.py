@@ -45,7 +45,7 @@ class GoDataProcessor:
 
         self.map_to_workers(data_type, data)  # <1>
         if use_generator:
-            generator = DataGenerator(self.data_dir, data)
+            generator = DataGenerator(self.data_dir, data, data_type)
             return generator  # <2>
         else:
             features_and_labels = self.consolidate_games(data_type, data)
